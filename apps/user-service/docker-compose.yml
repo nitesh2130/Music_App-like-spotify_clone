@@ -1,0 +1,11 @@
+services:
+  db:
+    image: mongo:latest
+    container_name: mongodb_container
+    restart: always
+    environment:
+      - MONGODB_USER=mongodb
+      - MONGODB_PASSWORD=mongodb_password 
+      - MONGODB_DB=mongo_db
+    ports:
+      - "27017:27017"
