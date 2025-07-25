@@ -10,4 +10,9 @@ export class UserController {
   crateUser() {
     return this.UserService.createUser();
   }
+
+  @Post()
+  loginUser() {
+    return this.UserService.loginUser();
+  }
 }
