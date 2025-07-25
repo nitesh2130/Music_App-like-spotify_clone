@@ -13,7 +13,7 @@ exports.CreateUserDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateUserDto {
     name;
-    phonrNumber;
+    phoneNumber;
     email;
     password;
 }
@@ -30,7 +30,7 @@ __decorate([
     (0, class_validator_1.Length)(10),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Number)
-], CreateUserDto.prototype, "phonrNumber", void 0);
+], CreateUserDto.prototype, "phoneNumber", void 0);
 __decorate([
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsNotEmpty)(),
