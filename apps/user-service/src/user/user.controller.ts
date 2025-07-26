@@ -10,12 +10,11 @@ export class UserController {
 
   @Post('register')
   async crateUser(@Body() createUserDto: CreateUserDto) {
-    console.log('this is controller');
     return this.UserService.registerUser(createUserDto);
   }
 
   @Post('login')
   loginUser(@Body() loginUserDto: LoginUserDto) {
-    return this.UserService.loginUser();
+    return this.UserService.loginUser(loginUserDto);
   }
 }

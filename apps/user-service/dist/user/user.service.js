@@ -18,10 +18,13 @@ const mongoose_1 = require("@nestjs/mongoose");
 const user_model_1 = require("./user.model");
 const mongoose_2 = require("mongoose");
 const bcrypt = require("bcrypt");
+const config_1 = require("@nestjs/config");
 let UserService = class UserService {
     userModel;
-    constructor(userModel) {
+    configService;
+    constructor(userModel, configService) {
         this.userModel = userModel;
+        this.configService = configService;
     }
     async registerUser(createUserDto) {
         console.log('this is serice');
@@ -29,7 +32,8 @@ let UserService = class UserService {
         if (!name || !email || !phoneNumber || !password) {
             throw new common_1.NotFoundException(' User data not found');
         }
-        console.log('this is name inner the dto');
+        const token = this.configService.get('ACCESS_TOKEN_SECRET');
+        console.log(`this is env data  ${token}`);
         const emailExist = await this.userModel.findOne({ email: email });
         if (emailExist) {
             throw new common_1.BadGatewayException('email is allready have is the database ');
@@ -53,7 +57,22 @@ let UserService = class UserService {
         console.log(`this user from user service ${newUser}`);
         return { message: 'User created successfully' };
     }
-    loginUser() {
+    async loginUser(loginUserDto) {
+        const { email, password } = loginUserDto;
+        if (!email || !password) {
+            throw new common_1.NotFoundException('email and password are not found');
+        }
+        console.log(`email is this--  ${email}   password is this ---    ${password}    ---`);
+        const emailUser = await this.userModel.findOne({ email: email });
+        if (!emailUser) {
+            throw new common_1.BadGatewayException('Email are not availble in our database');
+        }
+        const passwordMatch = await bcrypt.compare(password, emailUser.password);
+        if (!passwordMatch) {
+            throw new common_1.BadGatewayException('Sorry, password are not match');
+        }
+        const ACCESS_TOKEN_EXPIRE = process.env.ACCESS_TOKEN_EXPIRE || '1h';
+        const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'SONG_IS_AWESOME';
         return { messege: 'user can be login now ' };
     }
 };
@@ -61,6 +80,7 @@ exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_model_1.User.name)),
-    __metadata("design:paramtypes", [mongoose_2.Model])
+    __metadata("design:paramtypes", [mongoose_2.Model,
+        config_1.ConfigService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

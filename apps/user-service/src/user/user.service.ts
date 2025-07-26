@@ -8,21 +8,26 @@ import { User, UserSchema } from './user.model';
 import { CreateUserDto } from './DTO/createUsere.dto';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>, // ✅ This is the correct way
+    private configService: ConfigService,
   ) {}
 
-  async registerUser(createUserDto: CreateUserDto) {
+  async registerUser(
+    createUserDto: CreateUserDto,
+  ): Promise<{ message: string }> {
     console.log('this is serice');
     const { name, email, phoneNumber, password } = createUserDto;
     if (!name || !email || !phoneNumber || !password) {
       throw new NotFoundException(' User data not found');
     }
 
-    console.log('this is name inner the dto');
+    const token = this.configService.get<string>('ACCESS_TOKEN_SECRET'); // this is access .env file data
+    console.log(`this is env data  ${token}`);
 
     const emailExist = await this.userModel.findOne({ email: email });
     if (emailExist) {
@@ -51,11 +56,39 @@ export class UserService {
       password: hashedPassword,
     } as User);
     console.log(`this user from user service ${newUser}`);
-
     return { message: 'User created successfully' };
   }
 
-  loginUser() {
+  async loginUser(loginUserDto) {
+    const { email, password } = loginUserDto;
+    if (!email || !password) {
+      throw new NotFoundException('email and password are not found');
+    }
+
+    console.log(
+      `email is this--  ${email}   password is this ---    ${password}    ---`,
+    );
+
+    const emailUser = await this.userModel.findOne({ email: email });
+
+    if (!emailUser) {
+      throw new BadGatewayException('Email are not availble in our database');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, emailUser.password);
+    if (!passwordMatch) {
+      throw new BadGatewayException('Sorry, password are not match');
+    }
+
+    const ACCESS_TOKEN_EXPIRE = this.configService.get<string>(
+      'ACCESS_TOKEN_EXPIRE', // access the data of .env file
+    );
+    const ACCESS_TOKEN_SECRET = this.configService.get<string>(
+      'ACCESS_TOKEN_SECRET',
+    );
+
+    // const accessToken = await this.jwt
+
     return { messege: 'user can be login now ' };
   }
 }

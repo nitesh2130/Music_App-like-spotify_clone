@@ -7,7 +7,7 @@ export declare class UserController {
     crateUser(createUserDto: CreateUserDto): Promise<{
         message: string;
     }>;
-    loginUser(loginUserDto: LoginUserDto): {
+    loginUser(loginUserDto: LoginUserDto): Promise<{
         messege: string;
-    };
+    }>;
 }

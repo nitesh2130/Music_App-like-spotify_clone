@@ -1,13 +1,15 @@
 import { User } from './user.model';
 import { CreateUserDto } from './DTO/createUsere.dto';
 import { Model } from 'mongoose';
+import { ConfigService } from '@nestjs/config';
 export declare class UserService {
     private userModel;
-    constructor(userModel: Model<User>);
+    private configService;
+    constructor(userModel: Model<User>, configService: ConfigService);
     registerUser(createUserDto: CreateUserDto): Promise<{
         message: string;
     }>;
-    loginUser(): {
+    loginUser(loginUserDto: any): Promise<{
         messege: string;
-    };
+    }>;
 }

@@ -23,11 +23,10 @@ let UserController = class UserController {
         this.UserService = UserService;
     }
     async crateUser(createUserDto) {
-        console.log('this is controller');
         return this.UserService.registerUser(createUserDto);
     }
     loginUser(loginUserDto) {
-        return this.UserService.loginUser();
+        return this.UserService.loginUser(loginUserDto);
     }
 };
 exports.UserController = UserController;
