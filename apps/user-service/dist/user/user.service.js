@@ -71,8 +71,8 @@ let UserService = class UserService {
         if (!passwordMatch) {
             throw new common_1.BadGatewayException('Sorry, password are not match');
         }
-        const ACCESS_TOKEN_EXPIRE = process.env.ACCESS_TOKEN_EXPIRE || '1h';
-        const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET || 'SONG_IS_AWESOME';
+        const ACCESS_TOKEN_EXPIRE = this.configService.get('ACCESS_TOKEN_EXPIRE');
+        const ACCESS_TOKEN_SECRET = this.configService.get('ACCESS_TOKEN_SECRET');
         return { messege: 'user can be login now ' };
     }
 };

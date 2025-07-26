@@ -87,8 +87,6 @@ export class UserService {
       'ACCESS_TOKEN_SECRET',
     );
 
-    // const accessToken = await this.jwt
-
     return { messege: 'user can be login now ' };
   }
 }
