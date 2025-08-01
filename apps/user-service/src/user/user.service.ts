@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import {
   BadGatewayException,
   Injectable,
@@ -12,6 +13,11 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
+  find: any;
+  JwtService: any;
+  findone(username: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectModel(User.name) private userModel: Model<User>, // ✅ This is the correct way
     private configService: ConfigService,
@@ -86,6 +92,12 @@ export class UserService {
     const ACCESS_TOKEN_SECRET = this.configService.get<string>(
       'ACCESS_TOKEN_SECRET',
     );
+
+    console.log(`this is ACCESS_TOKEN_EXPIRE  ${ACCESS_TOKEN_EXPIRE} `);
+    console.log(`this is ACCESS_TOKEN_SECRET  ${ACCESS_TOKEN_SECRET} `);
+
+    const access_token = await this.JwtService.jwtlogin({ email: emailUser.email, userId: },
+      { secret: ACCESS_TOKEN_SECRET, expiresIn: ACCESS_TOKEN_EXPIRE },);
 
     return { messege: 'user can be login now ' };
   }
