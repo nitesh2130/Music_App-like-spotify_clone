@@ -1,4 +1,3 @@
-import { JwtService } from '@nestjs/jwt';
 import {
   BadGatewayException,
   Injectable,
@@ -13,14 +12,13 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
-  find: any;
-  JwtService: any;
   findone(username: string) {
     throw new Error('Method not implemented.');
   }
   constructor(
     @InjectModel(User.name) private userModel: Model<User>, // ✅ This is the correct way
     private configService: ConfigService,
+    // private readonly AuthService: AuthService,
   ) {}
 
   async registerUser(
@@ -86,19 +84,22 @@ export class UserService {
       throw new BadGatewayException('Sorry, password are not match');
     }
 
-    const ACCESS_TOKEN_EXPIRE = this.configService.get<string>(
-      'ACCESS_TOKEN_EXPIRE', // access the data of .env file
-    );
-    const ACCESS_TOKEN_SECRET = this.configService.get<string>(
-      'ACCESS_TOKEN_SECRET',
-    );
+    // const ACCESS_TOKEN_EXPIRE = this.configService.get<string>(
+    //   'ACCESS_TOKEN_EXPIRE', // access the data of .env file
+    // );
+    // const ACCESS_TOKEN_SECRET = this.configService.get<string>(
+    //   'ACCESS_TOKEN_SECRET',
+    // );
 
-    console.log(`this is ACCESS_TOKEN_EXPIRE  ${ACCESS_TOKEN_EXPIRE} `);
-    console.log(`this is ACCESS_TOKEN_SECRET  ${ACCESS_TOKEN_SECRET} `);
+    // console.log(`this is ACCESS_TOKEN_EXPIRE  ${ACCESS_TOKEN_EXPIRE} `);
+    // console.log(`this is ACCESS_TOKEN_SECRET  ${ACCESS_TOKEN_SECRET} `);
 
-    const access_token = await this.JwtService.jwtlogin({ email: emailUser.email, userId: },
-      { secret: ACCESS_TOKEN_SECRET, expiresIn: ACCESS_TOKEN_EXPIRE },);
+    console.log('this is after get accesstoken in the user login service');
 
-    return { messege: 'user can be login now ' };
+    return {
+      // access_token: access_token,
+      user: emailUser.email,
+      messege: 'user can be login now',
+    };
   }
 }

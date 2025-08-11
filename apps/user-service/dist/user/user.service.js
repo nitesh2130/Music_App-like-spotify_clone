@@ -22,6 +22,9 @@ const config_1 = require("@nestjs/config");
 let UserService = class UserService {
     userModel;
     configService;
+    findone(username) {
+        throw new Error('Method not implemented.');
+    }
     constructor(userModel, configService) {
         this.userModel = userModel;
         this.configService = configService;
@@ -71,9 +74,11 @@ let UserService = class UserService {
         if (!passwordMatch) {
             throw new common_1.BadGatewayException('Sorry, password are not match');
         }
-        const ACCESS_TOKEN_EXPIRE = this.configService.get('ACCESS_TOKEN_EXPIRE');
-        const ACCESS_TOKEN_SECRET = this.configService.get('ACCESS_TOKEN_SECRET');
-        return { messege: 'user can be login now ' };
+        console.log('this is after get accesstoken in the user login service');
+        return {
+            user: emailUser.email,
+            messege: 'user can be login now',
+        };
     }
 };
 exports.UserService = UserService;
