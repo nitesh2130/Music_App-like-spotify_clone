@@ -9,6 +9,7 @@ import { CreateUserDto } from './DTO/createUsere.dto';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -18,7 +19,7 @@ export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>, // ✅ This is the correct way
     private configService: ConfigService,
-    // private readonly AuthService: AuthService,
+    private jwtService: JwtService,
   ) {}
 
   async registerUser(
@@ -94,10 +95,14 @@ export class UserService {
     // console.log(`this is ACCESS_TOKEN_EXPIRE  ${ACCESS_TOKEN_EXPIRE} `);
     // console.log(`this is ACCESS_TOKEN_SECRET  ${ACCESS_TOKEN_SECRET} `);
 
-    console.log('this is after get accesstoken in the user login service');
+    console.log(emailUser);
+
+    const payload = { id: emailUser._id, name: emailUser.name };
+    const access_token = await this.jwtService.sign(payload);
+    console.log('this is the access_token', access_token);
 
     return {
-      // access_token: access_token,
+      access_token: access_token,
       user: emailUser.email,
       messege: 'user can be login now',
     };

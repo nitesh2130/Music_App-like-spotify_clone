@@ -19,15 +19,18 @@ const user_model_1 = require("./user.model");
 const mongoose_2 = require("mongoose");
 const bcrypt = require("bcrypt");
 const config_1 = require("@nestjs/config");
+const jwt_1 = require("@nestjs/jwt");
 let UserService = class UserService {
     userModel;
     configService;
+    jwtService;
     findone(username) {
         throw new Error('Method not implemented.');
     }
-    constructor(userModel, configService) {
+    constructor(userModel, configService, jwtService) {
         this.userModel = userModel;
         this.configService = configService;
+        this.jwtService = jwtService;
     }
     async registerUser(createUserDto) {
         console.log('this is serice');
@@ -74,8 +77,12 @@ let UserService = class UserService {
         if (!passwordMatch) {
             throw new common_1.BadGatewayException('Sorry, password are not match');
         }
-        console.log('this is after get accesstoken in the user login service');
+        console.log(emailUser);
+        const payload = { id: emailUser._id, name: emailUser.name };
+        const access_token = await this.jwtService.sign(payload);
+        console.log('this is the access_token', access_token);
         return {
+            access_token: access_token,
             user: emailUser.email,
             messege: 'user can be login now',
         };
@@ -86,6 +93,7 @@ exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_model_1.User.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
-        config_1.ConfigService])
+        config_1.ConfigService,
+        jwt_1.JwtService])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

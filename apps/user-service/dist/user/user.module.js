@@ -12,6 +12,9 @@ const user_service_1 = require("./user.service");
 const user_controller_1 = require("./user.controller");
 const mongoose_1 = require("@nestjs/mongoose");
 const user_model_1 = require("./user.model");
+const passport_1 = require("@nestjs/passport");
+const jwt_1 = require("@nestjs/jwt");
+const config_1 = require("@nestjs/config");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -21,6 +24,16 @@ exports.UserModule = UserModule = __decorate([
             mongoose_1.MongooseModule.forFeature([
                 { name: user_model_1.User.name, schema: user_model_1.UserSchema },
             ]),
+            passport_1.PassportModule,
+            jwt_1.JwtModule.registerAsync({
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    secret: configService.get('ACCESS_TOKEN_SECRET'),
+                    signOptions: {
+                        expiresIn: configService.get('ACCESS_TOKEN_EXPIRE'),
+                    },
+                }),
+            }),
         ],
         providers: [user_service_1.UserService],
         controllers: [user_controller_1.UserController],

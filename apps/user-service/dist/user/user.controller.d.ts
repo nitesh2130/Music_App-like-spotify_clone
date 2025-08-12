@@ -8,6 +8,7 @@ export declare class UserController {
         message: string;
     }>;
     loginUser(loginUserDto: LoginUserDto): Promise<{
+        access_token: string;
         user: string;
         messege: string;
     }>;
